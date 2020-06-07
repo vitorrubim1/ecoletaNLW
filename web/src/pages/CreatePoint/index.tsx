@@ -2,6 +2,7 @@ import React, { useEffect, useState, ChangeEvent } from 'react'; //ChangeEvent: 
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { Map, TileLayer, Marker } from 'react-leaflet';
+import { LeafletMouseEvent } from 'leaflet';
 import axios from 'axios';
 
 import api from '../../services/api';
@@ -36,6 +37,7 @@ const CreatePoint = () => {
 
     const [selectedUf, setSelectedUf] = useState('0');
     const [selectedCity, setSelectedCity] = useState('0');
+    const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]); //LATITUDE E LONGITUDE, E DIGO Q VEM ARRAY DE NUMEROS
 
     //PEGANDO OS ITEMS DO BACK
     useEffect(() => {
@@ -93,6 +95,16 @@ const CreatePoint = () => {
         setSelectedCity(city);
     }
 
+    //PRA ESCOLHER LOCALIDADE PELO MAPA
+    function handleMapCity(event: LeafletMouseEvent){
+        // console.log(event.latlng); //LATITUDE DE LONGITUDE QUE FOI CLICADA
+
+        setSelectedPosition([ //SETANDO O ESTADO
+            event.latlng.lat, //LATITUDE
+            event.latlng.lng, //LONGITUDE
+        ])
+    }
+
     return (
         <div id="page-create-point">
             <header>
@@ -147,12 +159,17 @@ const CreatePoint = () => {
                         <span>Selecione o endereço no mapa</span>
                     </legend>
 
-                    <Map center={[-23.4465838, -46.3145073]} zoom={15}>
+                    {/* MAPA */}
+                    <Map 
+                        center={[-23.4465838, -46.3145073]} 
+                        zoom={15}
+                        onclick={handleMapCity}
+                    >
                         <TileLayer
                             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        <Marker position={[-23.4465838, -46.3145073]} />
+                        <Marker position={selectedPosition} />
                     </Map>
 
                     <div className="field-group">
