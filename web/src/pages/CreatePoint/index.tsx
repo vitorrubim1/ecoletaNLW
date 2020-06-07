@@ -1,13 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
 import { Map, TileLayer, Marker } from 'react-leaflet';
+
+import api from '../../services/api';
 
 import './styles.css';
 
 import logo from '../../assets/logo.svg';
 
+//PRECISO INFORMAR MANUALMENTE OS TIPO QUANDO VEM UM ARRAY OU OBJETO, PRO ESTADO
+interface Item{
+    id: number,
+    title: string,
+    image_url: string 
+}
+
 const CreatePoint = () => {
+
+    //ARMAZENADO INFORMAÇÕES DENTRO DO COMPONENTE
+    const [items, setItems] = useState<Item[]>([]); //'<Item[]>': BUSCANDO DA INTERFACE, E DIZENDO Q VEM UM ARRAY 
+
+    //PEGANDO OS ITEMS DO BACK
+    useEffect(() => {
+        api.get('items').then(response => {
+            setItems(response.data); //SETANDO O ESTADO
+        });
+    }, []);
+
     return (
         <div id="page-create-point">
             <header>
@@ -67,7 +87,7 @@ const CreatePoint = () => {
                             attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        <Marker position={[-23.4465838, -46.3145073]}/>
+                        <Marker position={[-23.4465838, -46.3145073]} />
                     </Map>
 
                     <div className="field-group">
@@ -93,30 +113,12 @@ const CreatePoint = () => {
                     </legend>
 
                     <ul className="items-grid">
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
-                            <span>Lâmpada</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
-                            <span>Lâmpada</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
-                            <span>Lâmpada</span>
-                        </li>
-                        <li className="selected">
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
-                            <span>Lâmpada</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
-                            <span>Lâmpada</span>
-                        </li>
-                        <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
-                            <span>Lâmpada</span>
-                        </li>
+                        {items.map(item => (
+                            <li key={item.id}>
+                                <img src={item.image_url} alt={item.title} />
+                                <span>{item.title}</span>
+                            </li>
+                        ))}
                     </ul>
                 </fieldset>
 
