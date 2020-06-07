@@ -35,9 +35,21 @@ const CreatePoint = () => {
     const [ufs, setUfs] = useState<string[]>([]); //UFS, 'string[]' GUARDANDO UM ARRAY DE STRINGS 
     const [cities, setCities] = useState<string[]>([]); //CIDADES 'string[]' GUARDANDO UM ARRAY DE STRINGS
 
+    const [initialPosition, setInitialPosition] = useState<[number, number]>([0, 0]); //LATITUDE E LONGITUDE, E DIGO Q VEM ARRAY DE NUMEROS
+
+
     const [selectedUf, setSelectedUf] = useState('0');
     const [selectedCity, setSelectedCity] = useState('0');
-    const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]); //LATITUDE E LONGITUDE, E DIGO Q VEM ARRAY DE NUMEROS
+    const [selectedPosition, setSelectedPosition] = useState<[number, number]>([0, 0]);
+
+    useEffect(() => {
+        navigator.geolocation.getCurrentPosition(position => { //POSIÇÃO INICIAL DO USUÁRIO, DA ONDE ELE ESTÁ
+            // console.log(position);
+
+            const { latitude, longitude } = position.coords;
+            setInitialPosition([latitude, longitude]); //SETANDO A POSIÇÃO INICIAL
+        });
+    }, []);
 
     //PEGANDO OS ITEMS DO BACK
     useEffect(() => {
@@ -58,7 +70,7 @@ const CreatePoint = () => {
             });
     }, []);
 
-    //CARREGAR CIDADES
+    //CARREGAR CIDADES COM API DO IBGE
     useEffect(() => {
 
         if (selectedUf === '0') {
@@ -90,13 +102,13 @@ const CreatePoint = () => {
     }
 
     //MESMA COISA DA FUNÇÃO DE CIMA
-    function handleSelectCity(event: ChangeEvent<HTMLSelectElement>){
+    function handleSelectCity(event: ChangeEvent<HTMLSelectElement>) {
         const city = event.target.value;
         setSelectedCity(city);
     }
 
     //PRA ESCOLHER LOCALIDADE PELO MAPA
-    function handleMapCity(event: LeafletMouseEvent){
+    function handleMapCity(event: LeafletMouseEvent) {
         // console.log(event.latlng); //LATITUDE DE LONGITUDE QUE FOI CLICADA
 
         setSelectedPosition([ //SETANDO O ESTADO
@@ -160,8 +172,8 @@ const CreatePoint = () => {
                     </legend>
 
                     {/* MAPA */}
-                    <Map 
-                        center={[-23.4465838, -46.3145073]} 
+                    <Map
+                        center={initialPosition}
                         zoom={15}
                         onclick={handleMapCity}
                     >
@@ -190,8 +202,8 @@ const CreatePoint = () => {
 
                         <div className="field">
                             <label htmlFor="city">Cidade</label>
-                            <select 
-                                name="city" 
+                            <select
+                                name="city"
                                 id="city"
                                 value={selectedCity}
                                 onChange={handleSelectCity}
@@ -219,7 +231,6 @@ const CreatePoint = () => {
                         ))}
                     </ul>
                 </fieldset>
-
                 <button type="submit">Cadastrar ponto de Coleta</button>
             </form>
         </div>
