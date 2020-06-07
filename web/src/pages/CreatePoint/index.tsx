@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
+import { Map, TileLayer, Marker } from 'react-leaflet';
 
 import './styles.css';
 
@@ -60,23 +61,31 @@ const CreatePoint = () => {
                         <h2>Endereço</h2>
                         <span>Selecione o endereço no mapa</span>
                     </legend>
+
+                    <Map center={[-23.4465838, -46.3145073]} zoom={15}>
+                        <TileLayer
+                            attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
+                        <Marker position={[-23.4465838, -46.3145073]}/>
+                    </Map>
+
+                    <div className="field-group">
+                        <div className="field">
+                            <label htmlFor="uf">Estado (UF)</label>
+                            <select name="uf" id="uf">
+                                <option value="0">Selecione uma UF</option>
+                            </select>
+                        </div>
+
+                        <div className="field">
+                            <label htmlFor="city">Cidade</label>
+                            <select name="city" id="city">
+                                <option value="0">Selecione um cidade</option>
+                            </select>
+                        </div>
+                    </div>
                 </fieldset>
-
-                <div className="field-group">
-                    <div className="field">
-                        <label htmlFor="uf">Estado (UF)</label>
-                        <select name="uf" id="uf">
-                            <option value="0">Selecione uma UF</option>
-                        </select>
-                    </div>
-
-                    <div className="field">
-                        <label htmlFor="city">Cidade</label>
-                        <select name="city" id="city">
-                            <option value="0">Selecione um cidade</option>
-                        </select>
-                    </div>
-                </div>
                 <fieldset>
                     <legend>
                         <h2>Ítens de Coleta</h2>
@@ -85,27 +94,27 @@ const CreatePoint = () => {
 
                     <ul className="items-grid">
                         <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste"/>
+                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
                             <span>Lâmpada</span>
                         </li>
                         <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste"/>
+                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
                             <span>Lâmpada</span>
                         </li>
                         <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste"/>
+                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
                             <span>Lâmpada</span>
                         </li>
                         <li className="selected">
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste"/>
+                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
                             <span>Lâmpada</span>
                         </li>
                         <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste"/>
+                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
                             <span>Lâmpada</span>
                         </li>
                         <li>
-                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste"/>
+                            <img src="http://localhost:3333/uploads/lampadas.svg" alt="Teste" />
                             <span>Lâmpada</span>
                         </li>
                     </ul>
